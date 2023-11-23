@@ -24,7 +24,7 @@
     <ProjectGuid>{dd11ba27-1699-4af5-ac06-a07cd0f49cd2}</ProjectGuid>
     <RootNamespace>Sort2271135</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>SelectionSort_2271135</ProjectName>
+    <ProjectName>Sort_2271135</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -128,7 +128,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="SelectionSort.c" />
+    <ClCompile Include="Sort.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
