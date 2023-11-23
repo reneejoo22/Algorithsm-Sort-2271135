@@ -1,61 +1,44 @@
-//선택정렬
+//삽입정렬
 
 #include <stdio.h>
 #include <stdlib.h>
 
 #define MAX_SIZE 4
-#define SWAP(x,y,t)((t)=(x),(x)=(y),(y)=(t))	//x,y 값을 교환
 
 //int list[MAX_SIZE];
 int n;
 
-void selection_sort(int list[], int n) {	//선택정렬 오름차순
-	
-	int i, j, least, temp;	//갱신되는 초기 위치, 갱신되는 최소 찾는 위치, 최소의 위치, 저장
+void insert_sort(int list[], int n) {	//삽입정렬 오름차순
 
-	int num = 0;
+	int i, j, key;	//unsorted 영역 내의 위치, sorted 영역 내의 위치, sorted
 
-	printf("선택정렬 오름차순 시작\n\n");
+	for (i = 1; i < n; i++) {	//unsorted 영역의 가장 초기값
+		key = list[i];	//key에 저장
 
-	for (i = 0; i < n - 1; i++) {	//초기 자리 제외하고 찾기
-		least = i;	//i에 초기 자리 저장
-		for (j = i + 1; j < n; j++)	//초기 자리 제하고 최솟값 탐색
-			if (list[j] < list[least])least = j;	// 초기보다 작은 값 찾으면 해당 값 위치 저장
-		SWAP(list[i], list[least], temp);	//바꾸기
-
-
-		printf("====cycle %d====\n", ++num);
-		for (int q = 0; q < n; q++)	//정렬된 것 순서대로 출력
-			printf("%d ", list[q]);
-		printf("\n");
+		for (j = i - 1; j >= 0 && list[j] > key; j--)	//sorted 영역의 초기값, 키값이 더 작을시
+			list[j + 1] = list[j];	//sorted 초기값이 오른쪽으로 옮겨감
+		list[j + 1] = key;	//아닐시 그 자리에 그대로 있음
 	}
-	printf("\n");
+	
 }
 
-void selection_sort2(int list[], int n) {	//선택정렬 내림차순
+void insert_sort2(int list[], int n) {	//삽입정렬 내림차순
 
-	int i, j, least, temp;	//갱신되는 초기 위치, 갱신되는 최대 찾는 위치, 최대의 위치, 저장
-	
-	int num = 0;
+	int i, j, key;	//unsorted 영역 내의 위치, sorted 영역 내의 위치, sorted
 
-	printf("선택정렬 내림차순 시작\n\n");
-	
-	for (i = 0; i < n - 1; i++) {	//초기 자리 제외하고 찾기
-		least = i;	//i에 초기 자리 저장
-		for (j = i + 1; j < n; j++)	//초기 자리 제하고 최댓값 탐색
-			if (list[j] > list[least])least = j;	// 초기보다 큰 값 찾으면 해당 값 위치 저장
-		SWAP(list[i], list[least], temp);	//바꾸기
-		
-		printf("====cycle %d====\n", ++num);
-		for (int q = 0; q < n; q++)	//정렬된 것 순서대로 출력
-			printf("%d ", list[q]);
-		printf("\n");
+	for (i = 1; i < n; i++) {	//unsorted 영역의 가장 초기값
+		key = list[i];	//key에 저장
+
+		for (j = i - 1; j >= 0 && list[j] < key; j--)	//sorted 영역의 초기값, 키값이 더 클시
+			list[j + 1] = list[j];	//sorted 초기값이 오른쪽으로 옮겨감
+		list[j + 1] = key;	//아닐시 그 자리에 그대로 있음
 	}
-	printf("\n");
 }
+
+
 
 int main(void) {
-	
+
 	int i;
 	n = MAX_SIZE;
 
@@ -66,17 +49,16 @@ int main(void) {
 
 	int list[MAX_SIZE] = { 7,4,6,5 };
 
-	selection_sort(list, n);  //선택정렬 오름차순 시작
-	
-	printf("선택 정렬 오름차순 결과\n");
+	insert_sort(list, n);  //선택정렬 오름차순 시작
+
+	printf("삽입 정렬 오름차순 결과\n");
 	for (i = 0; i < n; i++)	//정렬된 것 순서대로 출력
-		printf("%d ",list[i]);
+		printf("%d ", list[i]);
 	printf("\n\n******************************\n\n");
 
+	insert_sort2(list, n);  //선택정렬 내림차순 시작
 
-	selection_sort2(list, n);  //선택정렬 내림차순 시작
-
-	printf("선택 정렬 내림차순 결과\n");
+	printf("삽입 정렬 내림차순 결과\n");
 	for (i = 0; i < n; i++)	//정렬된 것 순서대로 출력
 		printf("%d ", list[i]);
 	printf("\n");
@@ -85,6 +67,7 @@ int main(void) {
 }
 
 /*
-	1.가장 작은것 찾고 위치 저장
-	2. 해당 위치랑 제일 첫번째 자리와 swap
+	1. sorted 와 unsorted 나눔
+	2. sorted 바로 다음의 값을 key에 저장
+	3. key 보다 sorted 값이 작으면 왼쪽으로,
 */
