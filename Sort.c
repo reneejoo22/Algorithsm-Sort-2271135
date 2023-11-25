@@ -11,6 +11,8 @@ int n;
 void insert_sort(int list[], int n) {	//삽입정렬 오름차순
 
 	int i, j, key;	//unsorted 영역 내의 위치, sorted 영역 내의 위치, sorted
+	
+	int num = 0;
 
 	for (i = 1; i < n; i++) {	//unsorted 영역의 가장 초기값
 		key = list[i];	//key에 저장
@@ -18,7 +20,13 @@ void insert_sort(int list[], int n) {	//삽입정렬 오름차순
 		for (j = i - 1; j >= 0 && list[j] > key; j--)	//sorted 영역의 초기값, 키값이 더 작을시
 			list[j + 1] = list[j];	//sorted 초기값이 오른쪽으로 옮겨감
 		list[j + 1] = key;	//아닐시 그 자리에 그대로 있음
+
+		printf("====cycle %d====\n", ++num);
+		for (int q = 0; q < n; q++)	//정렬된 것 순서대로 출력
+			printf("%d ", list[q]);
+		printf("\n");
 	}
+	printf("\n");
 	
 }
 
@@ -26,14 +34,23 @@ void insert_sort2(int list[], int n) {	//삽입정렬 내림차순
 
 	int i, j, key;	//unsorted 영역 내의 위치, sorted 영역 내의 위치, sorted
 
+	int num = 0;
+
 	for (i = 1; i < n; i++) {	//unsorted 영역의 가장 초기값
 		key = list[i];	//key에 저장
 
 		for (j = i - 1; j >= 0 && list[j] < key; j--)	//sorted 영역의 초기값, 키값이 더 클시
 			list[j + 1] = list[j];	//sorted 초기값이 오른쪽으로 옮겨감
 		list[j + 1] = key;	//아닐시 그 자리에 그대로 있음
+
+		printf("====cycle %d====\n", ++num);
+		for (int q = 0; q < n; q++)	//정렬된 것 순서대로 출력
+			printf("%d ", list[q]);
+		printf("\n");
 	}
+	printf("\n");
 }
+
 
 
 
