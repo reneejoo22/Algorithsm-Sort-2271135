@@ -13,22 +13,40 @@ void bubble_sort(int list[], int n) {	//버블정렬 오름차순
 	
 	int i, j, temp;	//갱신되는 초기 위치, 갱신되는 최소 찾는 위치, 최소의 위치, 저장
 
+	int num = 0;
+
 	for (i = n - 1; i > 0; i--) {
 		for (j = 0; j < i; j++)
-			if (list[j] > list[j + 1])	//j+1이 더 작을시
+			if (list[j] > list[j + 1]) {	//j+1이 더 작을시
 				SWAP(list[j], list[j + 1], temp);
+
+				printf("====cycle %d====\n", ++num);
+				for (int q = 0; q < n; q++)	//정렬된 것 순서대로 출력
+					printf("%d ", list[q]);
+				printf("\n");
+			}
 	}
+	printf("\n");
 }
 
 void bubble_sort2(int list[], int n) {	//버블정렬 내림차순
 
 	int i, j, temp;	//갱신되는 초기 위치, 갱신되는 최소 찾는 위치, 최소의 위치, 저장
 
+	int num = 0;
+
 	for (i = n - 1; i > 0; i--) {
 		for (j = 0; j < i; j++)
-			if (list[j] < list[j + 1])	//j+1이 더 클시
+			if (list[j] < list[j + 1]) {	//j+1이 더 클시
 				SWAP(list[j], list[j + 1], temp);
+
+				printf("====cycle %d====\n", ++num);
+				for (int q = 0; q < n; q++)	//정렬된 것 순서대로 출력
+					printf("%d ", list[q]);
+				printf("\n");
+			}
 	}
+	printf("\n");
 }
 
 int main(void) {
