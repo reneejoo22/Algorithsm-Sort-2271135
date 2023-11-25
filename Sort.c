@@ -13,14 +13,23 @@ void inc_insertion_sort(int list[], int first, int last, int gap) {	//내림차순
 
 	int i, j, key;
 
+	//int num = 0;  //받는 간격 값 때문에 수가 누적 될 수 없음
+
 	for (i = first + gap; i <= last; i = i + gap) {	//반토막 낸 내에서
 		key = list[i];
 		for (j = i - gap; j >= first && list[j] > key; j = j - gap)	// 키값이 더 작을시
 			list[j + gap] = list[j];	//sorted 초기값이 오른쪽으로 옮겨감
 		list[j + gap] = key;	//아닐시 그 자리에 그대로 있음
+		
+		//printf("====cycle %d====\n", ++num);
+		for (int q = 0; q < n; q++)	//정렬된 것 순서대로 출력
+			printf("%d ", list[q]);
+		printf("\n");
 	}
-
+	//printf("\n");
 }
+
+
 
 void inc_insertion_sort2(int list[], int first, int last, int gap) {	//오름차순
 
@@ -31,6 +40,10 @@ void inc_insertion_sort2(int list[], int first, int last, int gap) {	//오름차순
 		for (j = i - gap; j >= first && list[j] < key; j = j - gap)	// 키값이 더 클시
 			list[j + gap] = list[j];	//sorted 초기값이 오른쪽으로 옮겨감
 		list[j + gap] = key;	//아닐시 그 자리에 그대로 있음
+
+		for (int q = 0; q < n; q++)	//정렬된 것 순서대로 출력
+			printf("%d ", list[q]);
+		printf("\n");
 	}
 
 }
@@ -40,7 +53,7 @@ void shell_sort(int list[], int n) {
 	int i, gap;	
 
 	for (gap = n / 2; gap > 0; gap = gap /2) {	//반토막 낸 값 계속 보내줘야됨
-		if ((gap % 2) == 0) gap++;
+		if ((gap % 2) == 0) gap++;	//나머지가 0이면 +1 해서 보냄
 		for (i = 0; i < gap; i++)
 			inc_insertion_sort(list, i, n - 1, gap);
 	}
@@ -80,10 +93,11 @@ int main(void) {
 	
 	printf("\n\n******************************\n\n");
 
-	printf("쉘정렬 오름차순 결과\n");
-	shell_sort2(list, n);  //쉘정렬 오름차순 시작
+	shell_sort2(list, n);  //쉘정렬 내림차순 시작
+	printf("쉘정렬 내림차순 결과\n");
 	for (i = 0; i < n; i++)	//정렬된 것 순서대로 출력
 		printf("%d ", list[i]);
+
 	printf("\n");
 
 	return 0;
