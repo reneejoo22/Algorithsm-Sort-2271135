@@ -47,7 +47,7 @@ int dequeue(QueueType* q) {
 	return q->data[q->front];
 }
 
-#define BUCKETS 10
+#define BUCKETS 5
 #define DIGITS 4
 
 void radix_sort(int list[], int n) {
@@ -55,10 +55,10 @@ void radix_sort(int list[], int n) {
 	int i, b, d, factor = 1;
 	QueueType queues[BUCKETS];
 
-	for (b = 0; b < BUCKETS; b++) init_queue(&queues[b]);
+	for (b = 0; b < BUCKETS; b++) init_queue(&queues[b]);	//큐들 초기화
 
 	for (d = 0; d < DIGITS; d++) {
-		for (i = 0; i < n; i++)
+		for (i = 0; i < n; i++)	//데이터들의 자리수에 따라 큐에 삽입
 			enqueue(&queues[(list[i] / factor) % 10], list[i]);
 	}
 
@@ -82,11 +82,9 @@ int main(void) {
 		list[i] = rand() % 100; //0~99
 	*/
 
-
-
 	radix_sort(list, SIZE);  //선택정렬 오름차순 시작
 	
-	printf("선택 정렬 오름차순 결과\n");
+	printf("기수 정렬 오름차순 결과\n");
 	for (int i = 0; i < SIZE; i++)	//정렬된 것 순서대로 출력
 		printf("%d ",list[i]);
 	printf("\n\n******************************\n\n");
@@ -101,8 +99,3 @@ int main(void) {
 	*/
 	return 0;
 }
-
-/*
-	1.가장 작은것 찾고 위치 저장
-	2. 해당 위치랑 제일 첫번째 자리와 swap
-*/
