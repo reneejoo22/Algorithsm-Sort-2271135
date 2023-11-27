@@ -1,139 +1,157 @@
 #include <stdio.h>
 #include <stdlib.h>
+#define MAX_ELEMENT 200
+typedef struct {
+	int key;
+} element;
+typedef struct {
+	element heap[MAX_ELEMENT];
+	int heap_size;
+} HeapType;
 
-#define MAX_QUEUE_SIZE 100
-typedef int element;
-typedef struct { // 큐 타입
-	element  data[MAX_QUEUE_SIZE];
-	int  front, rear;
-} QueueType;
 
-// 오류 함수
-void error(char* message)
+// 생성 함수
+HeapType* create()
 {
-	fprintf(stderr, "%s\n", message);
-	exit(1);
+	return (HeapType*)malloc(sizeof(HeapType));
 }
-
-// 공백 상태 검출 함수
-void init_queue(QueueType* q)
+// 초기화 함수
+void init(HeapType* h)
 {
-	q->front = q->rear = 0;
+	h->heap_size = 0;
 }
-
-// 공백 상태 검출 함수
-int is_empty(QueueType* q)
-{
-	return (q->front == q->rear);
-}
-
-// 포화 상태 검출 함수
-int is_full(QueueType* q)
-{
-	return ((q->rear + 1) % MAX_QUEUE_SIZE == q->front);
-}
-
+// 현재 요소의 개수가 heap_size인 히프 h에 item을 삽입한다.
 // 삽입 함수
-void enqueue(QueueType* q, element item)
+void insert_max_heap(HeapType* h, element item)
 {
-	if (is_full(q))
-		error("큐가 포화상태입니다");
-	q->rear = (q->rear + 1) % MAX_QUEUE_SIZE;
-	q->data[q->rear] = item;
+	int i;
+	i = ++(h->heap_size);
+
+	//  트리를 거슬러 올라가면서 부모 노드와 비교하는 과정
+	while ((i != 1) && (item.key > h->heap[i / 2].key)) {
+		h->heap[i] = h->heap[i / 2];
+		i /= 2;
+
+		
+	}
+	
+	h->heap[i] = item;     // 새로운 노드를 삽입
+	
 }
+
+void insert_min_heap(HeapType* h, element item)
+{
+	int i;
+	i = ++(h->heap_size);
+
+	//  트리를 거슬러 올라가면서 부모 노드와 비교하는 과정
+	while ((i != 1) && (item.key < h->heap[i / 2].key)) {
+		h->heap[i] = h->heap[i / 2];
+		i /= 2;
+	}
+	h->heap[i] = item;     // 새로운 노드를 삽입
+}
+
 
 // 삭제 함수
-element dequeue(QueueType* q)
+element delete_max_heap(HeapType* h)
 {
-	if (is_empty(q))
-		error("큐가 공백상태입니다");
-	q->front = (q->front + 1) % MAX_QUEUE_SIZE;
-	return q->data[q->front];
-}
+	int parent, child;
+	element item, temp;
 
-#define  SIZE 5
+	item = h->heap[1];
+	temp = h->heap[(h->heap_size)--];
+	parent = 1;
+	child = 2;
+	while (child <= h->heap_size) {
+		// 현재 노드의 자식노드 중 더 작은 자식노드를 찾는다.
+		if ((child < h->heap_size) &&
+			(h->heap[child].key) < h->heap[child + 1].key)
+			child++;
+		if (temp.key >= h->heap[child].key) break;
+		// 한 단계 아래로 이동
 
-void print_list(int list[]) {
-
-	for (int i = 0; i < SIZE; i++)
-		printf("%d ", list[i]);
-	printf("\n");
-}
-
-
-#define BUCKETS 10
-#define DIGITS  2
-void radix_sort(int list[], int n)	//오름차순
-{
-	int i, b, d, factor = 1;
-	QueueType queues[BUCKETS];
-
-	for (b = 0; b < BUCKETS; b++) init_queue(&queues[b]);  // 큐들의 초기화
-
-	for (d = 0; d < DIGITS; d++) {
-		for (i = 0; i < n; i++)			// 데이터들을 자리수에 따라 큐에 삽입
-			enqueue(&queues[(list[i] / factor) % 10], list[i]);
-		//해당하는 각 자리수에 리스트에 넣음
-		//print_list(list);
-
-		for (b = i = 0; b < BUCKETS; b++)  // 버킷에서 꺼내어 list로 합친다.
-			while (!is_empty(&queues[b]))
-				list[i++] = dequeue(&queues[b]);
-		print_list(list);
-		factor *= 10;					// 그 다음 자리수로 간다.
-
+		h->heap[parent] = h->heap[child];
+		parent = child;
+		child *= 2;
 	}
-
+	h->heap[parent] = temp;
+	return item;
 }
 
-void radix_sort2(int list[], int n)	// 내림차순
+element delete_min_heap(HeapType* h)
 {
-	int i, b, d, factor = 1;
-	QueueType queues[BUCKETS];
+	int parent, child;
+	element item, temp;
 
-	for (b = 0; b < BUCKETS; b++)
-		init_queue(&queues[b]);  // 큐들의 초기화
+	item = h->heap[1];
+	temp = h->heap[(h->heap_size)--];
+	parent = 1;
+	child = 2;
+	while (child <= h->heap_size) {
+		// 현재 노드의 자식노드 중 더 작은 자식노드를 찾는다.
+		if ((child < h->heap_size) &&
+			(h->heap[child].key) > h->heap[child + 1].key)
+			child++;
+		if (temp.key <= h->heap[child].key) break;
+		// 한 단계 아래로 이동
+		h->heap[parent] = h->heap[child];
+		parent = child;
+		child *= 2;
+	}
+	h->heap[parent] = temp;
+	return item;
+}
 
-	for (d = 0; d < DIGITS; d++) {
+void heap_sort(element a[], int n, int choice)
+{
+	int i;
+	HeapType* h;
+
+	h = create();
+	init(h);
+
+	if (choice == 0) {
 		for (i = 0; i < n; i++) {
-			// 데이터들을 자리수에 따라 큐에 삽입
-			enqueue(&queues[(list[i] / factor) % 10], list[i]);
+			insert_max_heap(h, a[i]);
 		}
 
-		for (b = i = 0; b < BUCKETS; b++) {
-			while (!is_empty(&queues[b])) {
-				// 내림차순으로 list 배열 채우기
-				list[n - 1 - i] = dequeue(&queues[b]);
-				i++;
-			}
+		for (i = (n - 1); i >= 0; i--) {
+			a[i] = delete_max_heap(h);
 		}
-
-		// 정렬된 결과 출력
-		print_list(list);
-		factor *= 10;
 	}
+
+	else {
+		for (i = 0; i < n; i++) {
+			insert_min_heap(h, a[i]);
+		}
+		for (i = (n - 1); i >= 0; i--) {
+			a[i] = delete_min_heap(h);
+		}
+	}
+
+	
+	free(h);
 }
 
-
+#define SIZE 4
 int main(void)
 {
-	int list[SIZE] = { 63, 21, 47, 52, 33 };
-	/*
-	srand(time(NULL));
-	for (int i = 0; i < SIZE; i++)      	// 난수 생성 및 출력
-		list[i] = rand() % 100;
-*/
+	element list[SIZE] = { 7, 4, 6, 5 };
 
-	radix_sort(list, SIZE); // 기수정렬 호출 
+	printf("히프 정렬 오름차순\n");
+	heap_sort(list, SIZE, 0);
+	for (int i = 0; i < SIZE; i++) {
+		printf("%d ", list[i].key);
+	}
+	printf("\n");
 
-	printf("\n===기수 정렬 오름차순===\n");
-	print_list(list);
-
-	printf("\n======\n");
-
-	radix_sort2(list, SIZE); // 기수정렬 호출 
-	printf("\n===기수 정렬 내림차순===\n");
-	print_list(list);
+	printf("히프 정렬 내림차순\n");
+	heap_sort(list, SIZE, 1);
+	for (int i = 0; i < SIZE; i++) {
+		printf("%d ", list[i].key);
+	}
+	printf("\n");
 
 	return 0;
 }
