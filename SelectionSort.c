@@ -1,101 +1,139 @@
-//기수정렬
-
 #include <stdio.h>
 #include <stdlib.h>
 
 #define MAX_QUEUE_SIZE 100
 typedef int element;
+typedef struct { // 큐 타입
+	element  data[MAX_QUEUE_SIZE];
+	int  front, rear;
+} QueueType;
 
-typedef struct {
-	element data[MAX_QUEUE_SIZE];
-	int front, rear;
-}QueueType;
-
-void error(char* message) {
+// 오류 함수
+void error(char* message)
+{
 	fprintf(stderr, "%s\n", message);
 	exit(1);
 }
 
-void init_queue(QueueType* q) {
-
+// 공백 상태 검출 함수
+void init_queue(QueueType* q)
+{
 	q->front = q->rear = 0;
 }
 
-int is_empty(QueueType* q) {
-	
+// 공백 상태 검출 함수
+int is_empty(QueueType* q)
+{
 	return (q->front == q->rear);
 }
 
-int is_full(QueueType* q) {
-
+// 포화 상태 검출 함수
+int is_full(QueueType* q)
+{
 	return ((q->rear + 1) % MAX_QUEUE_SIZE == q->front);
 }
 
-void enqueue(QueueType* q, element item) {
-
+// 삽입 함수
+void enqueue(QueueType* q, element item)
+{
 	if (is_full(q))
-		error("큐가 포화 상태");
+		error("큐가 포화상태입니다");
 	q->rear = (q->rear + 1) % MAX_QUEUE_SIZE;
 	q->data[q->rear] = item;
 }
 
-int dequeue(QueueType* q) {
-
+// 삭제 함수
+element dequeue(QueueType* q)
+{
 	if (is_empty(q))
-		error("큐가 공백 상태");
+		error("큐가 공백상태입니다");
 	q->front = (q->front + 1) % MAX_QUEUE_SIZE;
 	return q->data[q->front];
 }
 
-#define BUCKETS 5
-#define DIGITS 4
+#define  SIZE 5
 
-void radix_sort(int list[], int n) {
-	
+void print_list(int list[]) {
+
+	for (int i = 0; i < SIZE; i++)
+		printf("%d ", list[i]);
+	printf("\n");
+}
+
+
+#define BUCKETS 10
+#define DIGITS  2
+void radix_sort(int list[], int n)	//오름차순
+{
 	int i, b, d, factor = 1;
 	QueueType queues[BUCKETS];
 
-	for (b = 0; b < BUCKETS; b++) init_queue(&queues[b]);	//큐들 초기화
+	for (b = 0; b < BUCKETS; b++) init_queue(&queues[b]);  // 큐들의 초기화
 
 	for (d = 0; d < DIGITS; d++) {
-		for (i = 0; i < n; i++)	//데이터들의 자리수에 따라 큐에 삽입
+		for (i = 0; i < n; i++)			// 데이터들을 자리수에 따라 큐에 삽입
 			enqueue(&queues[(list[i] / factor) % 10], list[i]);
+		//해당하는 각 자리수에 리스트에 넣음
+		//print_list(list);
+
+		for (b = i = 0; b < BUCKETS; b++)  // 버킷에서 꺼내어 list로 합친다.
+			while (!is_empty(&queues[b]))
+				list[i++] = dequeue(&queues[b]);
+		print_list(list);
+		factor *= 10;					// 그 다음 자리수로 간다.
+
 	}
 
-	for (b = i = 0; b < BUCKETS; b++) {
-		while (!is_empty(&queues[b]))
-			list[i++] = dequeue(&queues[b]);
+}
+
+void radix_sort2(int list[], int n)	// 내림차순
+{
+	int i, b, d, factor = 1;
+	QueueType queues[BUCKETS];
+
+	for (b = 0; b < BUCKETS; b++)
+		init_queue(&queues[b]);  // 큐들의 초기화
+
+	for (d = 0; d < DIGITS; d++) {
+		for (i = 0; i < n; i++) {
+			// 데이터들을 자리수에 따라 큐에 삽입
+			enqueue(&queues[(list[i] / factor) % 10], list[i]);
+		}
+
+		for (b = i = 0; b < BUCKETS; b++) {
+			while (!is_empty(&queues[b])) {
+				// 내림차순으로 list 배열 채우기
+				list[n - 1 - i] = dequeue(&queues[b]);
+				i++;
+			}
+		}
+
+		// 정렬된 결과 출력
+		print_list(list);
 		factor *= 10;
 	}
 }
 
-#define SIZE 5
 
-int main(void) {
-	
-	int list[SIZE] = {63, 21, 47, 52, 33};
-
-	//n = MAX_SIZE;
-
-	/*srand(time(NULL));
-	for (i = 0; i < n; i++)	//정해진 값만큼 난수 생성
-		list[i] = rand() % 100; //0~99
-	*/
-
-	radix_sort(list, SIZE);  //선택정렬 오름차순 시작
-	
-	printf("기수 정렬 오름차순 결과\n");
-	for (int i = 0; i < SIZE; i++)	//정렬된 것 순서대로 출력
-		printf("%d ",list[i]);
-	printf("\n\n******************************\n\n");
-
+int main(void)
+{
+	int list[SIZE] = { 63, 21, 47, 52, 33 };
 	/*
-	selection_sort2(list, n);  //선택정렬 내림차순 시작
+	srand(time(NULL));
+	for (int i = 0; i < SIZE; i++)      	// 난수 생성 및 출력
+		list[i] = rand() % 100;
+*/
 
-	printf("선택 정렬 내림차순 결과\n");
-	for (i = 0; i < n; i++)	//정렬된 것 순서대로 출력
-		printf("%d ", list[i]);
-	printf("\n");
-	*/
+	radix_sort(list, SIZE); // 기수정렬 호출 
+
+	printf("\n===기수 정렬 오름차순===\n");
+	print_list(list);
+
+	printf("\n======\n");
+
+	radix_sort2(list, SIZE); // 기수정렬 호출 
+	printf("\n===기수 정렬 내림차순===\n");
+	print_list(list);
+
 	return 0;
 }
