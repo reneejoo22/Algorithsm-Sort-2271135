@@ -25,7 +25,7 @@ void print_list(int list[], int n) {
 }
 
 int partition(int list[], int left, int right) {    //오름
-    
+
     int pivot, temp;
     int low, high;
 
@@ -37,7 +37,7 @@ int partition(int list[], int left, int right) {    //오름
         do
             low++;
         while (list[low] < pivot);  //low가 더 작은 경우 탐색 계속 진행
-        
+
         do
             high--;
         while (list[high] > pivot); //high가 더 큰 경우 탐색 계속 진행
@@ -48,11 +48,11 @@ int partition(int list[], int left, int right) {    //오름
 
             print_list(list, MAX_SIZE);
         }
-    
+
     } while (low < high);   //둘이 교차하면 탐색 멈춤
 
     SWAP(list[left], list[high], temp);
-    
+
     print_list(list, MAX_SIZE);
 
     return high;
@@ -78,7 +78,7 @@ int partition2(int list[], int left, int right) {   //내림
 
         if (low < high) {
             SWAP(list[low], list[high], temp);   //와일문에 반할시 둘의 값 바꿈
-           
+
             print_list(list, MAX_SIZE);
         }
     } while (low < high);   //둘이 교차하면 탐색 멈춤
@@ -94,12 +94,12 @@ void quick_sort(int list[], int left, int right, int choice) {
 
     if (left < right) {
         if (choice == 0) {
-            int q = partition(list, left, right, choice);
+            int q = partition(list, left, right);
             quick_sort(list, left, q - 1, choice);  //왼쪽만 정렬진행
             quick_sort(list, q + 1, right, choice); //른쪽만 정렬진행
         }
         else {
-            int q = partition2(list, left, right, choice);
+            int q = partition2(list, left, right);
             quick_sort(list, left, q - 1, choice);  //왼쪽만 정렬진행
             quick_sort(list, q + 1, right, choice); //른쪽만 정렬진행
 
@@ -129,10 +129,10 @@ int main(void) {
 
     quick_sort(list, 0, n - 1, 1); // 선택정렬 내림차순(1) 시작
     printf("퀵 정렬 내림차순 결과\n");
-    print_list(list ,n);
+    print_list(list, n);
 
     printf("\n[오름]퀵 라이버리 함수 사용 결과\n");
-    qsort(list, MAX_SIZE, sizeof(int),compare);
+    qsort(list, MAX_SIZE, sizeof(int), compare);
     print_list(list, n);
 
     printf("\n[내림]퀵 라이버리 함수 사용 결과\n");
